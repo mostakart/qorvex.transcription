@@ -13,14 +13,16 @@ st.set_page_config(page_title="Waffarha Audio AI", page_icon="🎙️", layout="
 st.title("🎙️ المحلل الصوتي الذكي")
 st.markdown("ارفع أي ملف صوتي (اجتماع، فويس نوت، مكالمة كول سنتر)، والذكاء الاصطناعي هيفرغه حرفياً باللهجة المصرية بدون أي هلوسة!")
 
-# 2. خانة آمنة لإدخال مفتاح جوجل (عشان محدش يسرقه)
-api_key_input = st.text_input("🔑 أدخل مفتاح Gemini API بتاعك:", type="password")
+# ==========================================
+# 🚨 المفتاح مدمج في الكود مباشرة 
+# ==========================================
+GEMINI_API_KEY = "AIzaSyB0DIRZCvDrdPLceza_24VmG6K8xSNDx_M"
 
-# 3. مكان رفع الملف الصوتي
+# 2. مكان رفع الملف الصوتي (مفيش خانة للمفتاح خلاص)
 uploaded_file = st.file_uploader("📂 ارفع ملف الصوت هنا...", type=["mp3", "wav", "m4a"])
 
-# 4. لو اليوزر رفع الملف وحط المفتاح، نظهر زرار التشغيل
-if uploaded_file and api_key_input:
+# 3. لو اليوزر رفع الملف، نظهر زرار التشغيل على طول
+if uploaded_file:
     # تشغيل مقطع الصوت جوه الموقع عشان اليوزر يتأكد منه
     st.audio(uploaded_file)
     
@@ -37,7 +39,8 @@ if uploaded_file and api_key_input:
             
         try:
             start_time = time.time()
-            client = genai.Client(api_key=api_key_input)
+            # الاتصال بجوجل باستخدام المفتاح المدمج
+            client = genai.Client(api_key=GEMINI_API_KEY)
             
             # رفع الملف لجوجل
             status_text.warning("📤 جاري رفع الملف لعقل Gemini (البيانات مشفرة)...")
@@ -94,6 +97,3 @@ if uploaded_file and api_key_input:
             # تنظيف اللاب توب بتاعك ومسح الملف المؤقت
             if os.path.exists(temp_audio_path):
                 os.remove(temp_audio_path)
-
-elif not api_key_input and uploaded_file:
-    st.warning("⚠️ يرجى إدخال مفتاح الـ API في الأعلى للبدء.")
